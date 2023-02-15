@@ -39,11 +39,8 @@ mvn install
 ```
 
 #### 4. Configure as informações de conexão com o banco de dados no arquivo `application.properties`.
-```sh
-mvn install
-```
 
-#### Execute a aplicação com o comando ou use sua IDE de preferência para executar o projeto:
+#### 5. Execute a aplicação com o comando ou use sua IDE de preferência para executar o projeto:
 ```sh
 mvn spring-boot:run
 ```
