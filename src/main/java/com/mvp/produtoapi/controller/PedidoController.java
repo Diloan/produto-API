@@ -28,9 +28,9 @@ public class PedidoController {
     @PostMapping("/adicionar")
     @Transactional
     public ResponseEntity<PedidoDTO> cadastrarPedido(@RequestBody PedidoDTO pedidoDTO, UriComponentsBuilder uriBuilder) {
-        PedidoDTO pedidos = pedidoService.cadastrarPedido(pedidoDTO);
+        Pedido pedidos = pedidoService.cadastrarPedido(pedidoDTO);
         URI uri = uriBuilder.path("Pedidos/{id}").buildAndExpand(pedidoDTO.getId()).toUri();
-        return ResponseEntity.created(uri).body(pedidos);
+        return ResponseEntity.created(uri).body(PedidoDTO.converterToDto(pedidos));
     }
 
     @GetMapping
