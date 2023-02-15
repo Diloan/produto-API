@@ -1,5 +1,6 @@
 package com.mvp.produtoapi.dto;
 
+import com.mvp.produtoapi.ENUM.SituacaoProduto;
 import com.mvp.produtoapi.ENUM.TipoProduto;
 import com.mvp.produtoapi.entity.Produto;
 
@@ -17,6 +18,7 @@ public class ProdutoDTO {
     private String descricao;
     private BigDecimal preco;
     private LocalDate dataCadastro = LocalDate.now();
+    private SituacaoProduto situacao = SituacaoProduto.ATIVO;
 
     public ProdutoDTO() {
     }
@@ -28,6 +30,7 @@ public class ProdutoDTO {
         this.descricao = produto.getDescricao();
         this.preco = produto.getPreco();
         this.dataCadastro = produto.getDataCadastro();
+        this.situacao = produto.getSituacao();
     }
 
     public UUID getId() {
@@ -87,5 +90,13 @@ public class ProdutoDTO {
 
     public static List<ProdutoDTO> converterToList(List<Produto> produtos) {
         return produtos.stream().map(ProdutoDTO::new).collect(Collectors.toList());
+    }
+
+    public SituacaoProduto getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(SituacaoProduto situacao) {
+        this.situacao = situacao;
     }
 }

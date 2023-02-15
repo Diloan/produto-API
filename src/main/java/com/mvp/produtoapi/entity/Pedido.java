@@ -1,6 +1,7 @@
 package com.mvp.produtoapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mvp.produtoapi.ENUM.SituacaoProduto;
 import com.mvp.produtoapi.ENUM.StatusPedido;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -41,7 +42,9 @@ public class Pedido {
     public void adicionarItem(ItemPedido item) {
         item.setPedido(this);
         item.setValorUnitario(item.getProduto().getPreco());
-        this.getItens().add(item);
+        if (item.getProduto().getSituacao().getNome().equalsIgnoreCase(SituacaoProduto.ATIVO.getNome())) {
+            this.getItens().add(item);
+        }
         this.valorTotal = this.valorTotal.add(item.getValorTotal());
     }
 

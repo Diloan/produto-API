@@ -1,6 +1,7 @@
 package com.mvp.produtoapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mvp.produtoapi.ENUM.SituacaoProduto;
 import com.mvp.produtoapi.ENUM.TipoProduto;
 import jakarta.persistence.*;
 
@@ -24,6 +25,7 @@ public class Produto {
     private String descricao;
     private BigDecimal preco;
     private LocalDate dataCadastro = LocalDate.now();
+    private SituacaoProduto situacao= SituacaoProduto.ATIVO;
 
     public Produto() {
     }
@@ -80,6 +82,14 @@ public class Produto {
 
     public void setDataCadastro(LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public SituacaoProduto getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(SituacaoProduto situacao) {
+        this.situacao = situacao;
     }
 
 }
