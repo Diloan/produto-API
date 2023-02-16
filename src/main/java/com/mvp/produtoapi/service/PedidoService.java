@@ -1,5 +1,6 @@
 package com.mvp.produtoapi.service;
 
+import com.mvp.produtoapi.ENUM.SituacaoProduto;
 import com.mvp.produtoapi.ENUM.StatusPedido;
 import com.mvp.produtoapi.ENUM.TipoProduto;
 import com.mvp.produtoapi.dto.PedidoDTO;
@@ -30,7 +31,16 @@ public class PedidoService {
     }
 
     public Pedido cadastrarPedido(PedidoDTO pedidoDTO) {
-        return pedidoRepository.save(pedidoDTO.toEntity());
+        Pedido pedido = pedidoDTO.toEntity();
+
+        for (ItemPedido item : pedidoDTO.getItens()) {
+            if (item.getProduto().getSituacao().getNome().equalsIgnoreCase(SituacaoProduto.ATIVO.getNome())) {
+                pedido.adicionarItem(item);
+            }
+            item.setPedido(pedido);
+        }
+
+        return pedidoRepository.save(pedido);
     }
 
     public Page<Pedido> listarTodosPedidos(int pagina, int quantidade, String ordenacao, String direcao) {

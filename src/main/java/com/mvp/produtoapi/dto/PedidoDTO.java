@@ -3,8 +3,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mvp.produtoapi.ENUM.StatusPedido;
 import com.mvp.produtoapi.entity.ItemPedido;
 import com.mvp.produtoapi.entity.Pedido;
-import com.mvp.produtoapi.entity.Produto;
-
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -85,20 +83,7 @@ public class PedidoDTO {
     }
 
     public Pedido toEntity() {
-        Pedido pedido = new Pedido();
-        pedido.setId(this.id);
-        pedido.setData(this.data);
-        pedido.setValorTotal(this.valorTotal);
-        pedido.setStatus(this.status);
-        pedido.setDesconto(this.desconto);
-
-        for (ItemPedido item : this.itens) {
-            pedido.adicionarItem(item);
-        }
-
-        return pedido;
-
-        //return new Pedido(valorTotal, status, desconto, data, itens);
+        return new Pedido(valorTotal, status, desconto, data, itens);
     }
     public static PedidoDTO converterToDto(Pedido pedido) {
         return new PedidoDTO(pedido);

@@ -1,9 +1,9 @@
 package com.mvp.produtoapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.mvp.produtoapi.ENUM.SituacaoProduto;
 import com.mvp.produtoapi.ENUM.StatusPedido;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,7 +21,6 @@ public class Pedido {
     private BigDecimal valorTotal = BigDecimal.ZERO;
     private LocalDate data = LocalDate.now();
     private StatusPedido status;
-
     private BigDecimal desconto = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -42,9 +41,6 @@ public class Pedido {
     public void adicionarItem(ItemPedido item) {
         item.setPedido(this);
         item.setValorUnitario(item.getProduto().getPreco());
-        if (item.getProduto().getSituacao().getNome().equalsIgnoreCase(SituacaoProduto.ATIVO.getNome())) {
-            this.getItens().add(item);
-        }
         this.valorTotal = this.valorTotal.add(item.getValorTotal());
     }
 
