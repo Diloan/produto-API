@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mvp.produtoapi.ENUM.SituacaoProduto;
 import com.mvp.produtoapi.ENUM.TipoProduto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,15 +18,21 @@ public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @NotBlank(message = "Nome não pode ser vazio")
+    @NotNull(message = "Nome é obrigatório")
     private String nome;
-
+    @NotNull(message = "Tipo de produto é obrigatório")
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "tipo_produto")
     private TipoProduto tipoProduto;
-
+    @NotBlank(message = "Descrição não pode ser vazia")
     private String descricao;
+    @NotNull(message = "Preço não pode ser vazio")
+    @NotNull(message = "Preço é obrigatório")
     private BigDecimal preco;
     private LocalDate dataCadastro = LocalDate.now();
+    @NotBlank(message = "Situação não pode ser vazia")
+    @NotNull(message = "Situação é obrigatório")
     private SituacaoProduto situacao= SituacaoProduto.ATIVO;
 
     public Produto() {
