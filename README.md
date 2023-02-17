@@ -40,7 +40,9 @@ mvn install
 
 #### 4. Configure as informações de conexão com o banco de dados no arquivo `application.properties`.
 
-#### 5. Execute a aplicação com o comando ou use sua IDE de preferência para executar o projeto:
+#### 5. Criar uma base de dados no PostgreSQL com o nome `loja`.
+
+#### 6. Execute a aplicação com o comando ou use sua IDE de preferência para executar o projeto:
 ```sh
 mvn spring-boot:run
 ```
