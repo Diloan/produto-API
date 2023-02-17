@@ -61,3 +61,4 @@ A API está disponível na URL http://localhost:8010/produtos. As seguintes oper
 - Obter informações de um pedido específico: `GET /pedidos/{id}`
 - Atualizar informações de um pedido: `PATCH /pedidos/{id}`
 - Deletar um pedido: `DELETE /pedidos/{id}`
+- Aplicar desconto em um pedido: `PATCH /pedidos/{id}/desconto/{desconto}`

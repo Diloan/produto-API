@@ -81,7 +81,7 @@ public class ProdutoDTO {
     }
 
     public Produto toEntity() {
-        return new Produto(nome, tipoProduto, descricao, preco);
+        return new Produto(nome, tipoProduto, descricao, preco, situacao);
     }
 
     public static ProdutoDTO converterToDto(Produto produto) {

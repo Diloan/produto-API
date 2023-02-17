@@ -31,18 +31,19 @@ public class Produto {
     @NotNull(message = "Preço é obrigatório")
     private BigDecimal preco;
     private LocalDate dataCadastro = LocalDate.now();
-    @NotBlank(message = "Situação não pode ser vazia")
     @NotNull(message = "Situação é obrigatório")
-    private SituacaoProduto situacao= SituacaoProduto.ATIVO;
+    @Enumerated(EnumType.ORDINAL)
+    private SituacaoProduto situacao;
 
     public Produto() {
     }
 
-    public Produto(String nome, TipoProduto tipoProduto, String descricao, BigDecimal preco) {
+    public Produto(String nome, TipoProduto tipoProduto, String descricao, BigDecimal preco, SituacaoProduto situacao) {
         this.nome = nome;
         this.tipoProduto = TipoProduto.obterTipo(tipoProduto.getId());
         this.descricao = descricao;
         this.preco = preco;
+        this.situacao = SituacaoProduto.obterSituacao(situacao.getId());
     }
 
     public UUID getId() {

@@ -21,17 +21,15 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(name = "valor_total")
-    @NotBlank(message = "Valor total não pode ser vazio")
     @NotNull(message = "Valor total é obrigatório")
     private BigDecimal valorTotal = BigDecimal.ZERO;
     private LocalDate data = LocalDate.now();
-    @NotBlank(message = "Status não pode ser vazio")
     @NotNull(message = "Status é obrigatório")
     private StatusPedido status;
     @Max(value = 100, message = "Desconto deve ser menor ou igual a 100%")
     private BigDecimal desconto = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ItemPedido> itens = new ArrayList<>();
 

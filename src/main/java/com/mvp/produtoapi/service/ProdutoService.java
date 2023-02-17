@@ -2,6 +2,7 @@ package com.mvp.produtoapi.service;
 
 import com.mvp.produtoapi.dto.ProdutoDTO;
 import com.mvp.produtoapi.entity.Produto;
+import com.mvp.produtoapi.exception.ProdutoNotFoundException;
 import com.mvp.produtoapi.repository.ProdutoRepository;
 import com.mvp.produtoapi.util.UtilAPI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,18 +35,22 @@ public class ProdutoService {
         return produtoRepository.findAll(pageable);
     }
 
-    public Produto buscarProdutoPorId(@PathVariable UUID id) {
-        return produtoRepository.findById(id).orElse(null);
+    public Optional<Produto> buscarProdutoPorId(@PathVariable UUID id) {
+         return produtoRepository.findById(id);
     }
 
     public Produto atualizarProduto(ProdutoDTO produtoDTO) {
-        Produto produto = buscarProdutoPorId(produtoDTO.getId());
-        produto.setNome(produtoDTO.getNome());
-        produto.setDescricao(produtoDTO.getDescricao());
-        produto.setPreco(produtoDTO.getPreco());
-        produto.setDataCadastro(produtoDTO.getDataCadastro());
-        produtoRepository.save(produto);
-        return produto;
+        Optional<Produto> produto = buscarProdutoPorId(produtoDTO.getId());
+        if (produto.isPresent()) {
+            produto.get().setNome(produtoDTO.getNome());
+            produto.get().setDescricao(produtoDTO.getDescricao());
+            produto.get().setPreco(produtoDTO.getPreco());
+            produto.get().setDataCadastro(produtoDTO.getDataCadastro());
+            produtoRepository.save(produto.get());
+            return produto.get();
+        } else {
+            throw new ProdutoNotFoundException(produtoDTO.getId());
+        }
     }
     public void removeProduto(UUID id) {
         produtoRepository.deleteById(id);

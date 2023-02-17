@@ -2,6 +2,9 @@ package com.mvp.produtoapi.controller;
 
 import com.mvp.produtoapi.dto.ProdutoDTO;
 import com.mvp.produtoapi.entity.Produto;
+import com.mvp.produtoapi.exception.ProdutoBadRequestException;
+import com.mvp.produtoapi.exception.ProdutoInternalServerErrorException;
+import com.mvp.produtoapi.exception.ProdutoNotFoundException;
 import com.mvp.produtoapi.service.ProdutoService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +33,9 @@ public class ProdutoController {
     @Transactional
     public ResponseEntity<ProdutoDTO> cadastrarProduto(@RequestBody ProdutoDTO produtoDTO, UriComponentsBuilder uriBuilder) {
         Produto produto = produtoService.cadastrarProduto(produtoDTO);
+        if (produto == null) {
+            throw new ProdutoInternalServerErrorException("Erro ao cadastrar produto");
+        }
         URI uri = uriBuilder.path("produtos/{id}").buildAndExpand(produto.getId()).toUri();
         return ResponseEntity.created(uri).body(produtoDTO.converterToDto(produto));
     }
@@ -36,22 +43,31 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<List<ProdutoDTO>> listarTodosProdutos(@RequestParam int pagina, @RequestParam int quantidade, @RequestParam String ordenacao, @RequestParam String direcao) {
         Page<Produto> produtos = produtoService.listarTodosProdutos(pagina, quantidade, ordenacao, direcao);
+        if (produtos.isEmpty()) {
+            throw new ProdutoNotFoundException("Nenhum produto encontrado");
+        }
         List<ProdutoDTO> produtoDTOs = ProdutoDTO.converterToList(produtos.stream().toList());
         return ResponseEntity.ok(produtoDTOs);
     }
 
     @GetMapping("/{id}")
     public ProdutoDTO buscarProdutoPorId(@PathVariable UUID id) {
-        Produto produtos = produtoService.buscarProdutoPorId(id);
-        return ProdutoDTO.converterToDto(produtos);
+        Optional<Produto> produtos = produtoService.buscarProdutoPorId(id);
+
+        if (produtos.isEmpty()) {
+            throw new ProdutoNotFoundException(id);
+        }
+
+        return ProdutoDTO.converterToDto(produtos.get());
     }
 
     @PatchMapping("{id}")
     @Transactional
     public ResponseEntity<ProdutoDTO> atualizarProduto(@PathVariable UUID id , @RequestBody ProdutoDTO produtoDTO) {
-        Produto produto = produtoService.buscarProdutoPorId(id);
-        if (produto == null) {
-            return ResponseEntity.notFound().build();
+        Optional<Produto> produto = produtoService.buscarProdutoPorId(id);
+
+        if (produto.isEmpty()) {
+            throw new ProdutoNotFoundException(id);
         }
 
         produtoService.atualizarProduto(produtoDTO);
@@ -61,15 +77,15 @@ public class ProdutoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<String> removerProduto(@PathVariable UUID id) {
-        Produto produto = produtoService.buscarProdutoPorId(id);
-        if (produto == null) {
-            return ResponseEntity.notFound().build();
+        Optional<Produto> produto = produtoService.buscarProdutoPorId(id);
+
+        if (produto.isEmpty()) {
+            throw new ProdutoNotFoundException(id);
         }
 
         Boolean estaEmPedido = produtoService.verificarSeProdutoEstaEmPedido(id);
-
         if (estaEmPedido) {
-            return ResponseEntity.badRequest().body("Produto não pode ser removido, pois está em um pedido");
+            throw new ProdutoBadRequestException(id, "Produto não pode ser removido pois está em um pedido, id: ");
         }
 
         produtoService.removeProduto(id);

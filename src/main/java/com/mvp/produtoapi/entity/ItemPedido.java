@@ -15,12 +15,10 @@ public class ItemPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @NotBlank(message = "Valor unitário não pode ser vazio")
     @NotNull(message = "Valor unitário é obrigatório")
     @Column(name = "valor_unitario")
     @Min(value = 1, message = "Valor unitário deve ser maior que zero")
     private BigDecimal valorUnitario;
-    @NotBlank(message = "Quantidade não pode ser vazia")
     @NotNull(message = "Quantidade é obrigatória")
     @Min(value = 1, message = "Quantidade deve ser maior que zero")
     private int quantidade;
